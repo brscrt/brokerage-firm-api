@@ -1,0 +1,26 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+application:
+  version: @project.version@
+
+spring:
+  application:
+    name: brokerage-firm
+  profiles:
+    active: ${PROFILE:dev}
+  flyway:
+    enabled: ${FLYWAY_ENABLED:true}
+    baseline-on-migrate: true
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_DB_HOST}:${POSTGRES_DB_PORT}/${POSTGRES_DB_NAME}
+    username: ${POSTGRES_DB_USERNAME}
+    password: ${POSTGRES_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: ${POSTGRES_DDL_AUTO:validate}
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION:3600000}

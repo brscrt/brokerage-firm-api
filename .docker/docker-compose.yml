@@ -1,0 +1,48 @@
+services:
+  app:
+    image: brscrt/brokerage-firm-api
+    build:
+      context: ../
+      dockerfile: ./.docker/brokerage-firm-api/Dockerfile
+    environment:
+      # Profile Configuration
+      - PROFILE=${PROFILE}
+      # PostgreSQL Configuration
+      - POSTGRES_DB_HOST=${POSTGRES_DB_HOST}
+      - POSTGRES_DB_PORT=${POSTGRES_DB_PORT}
+      - POSTGRES_DB_NAME=${POSTGRES_DB_NAME}
+      - POSTGRES_DB_USERNAME=${POSTGRES_DB_USERNAME}
+      - POSTGRES_DB_PASSWORD=${POSTGRES_DB_PASSWORD}
+      # JWT Configuration
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRATION=${JWT_EXPIRATION}
+      # Flyway Configuration
+      - FLYWAY_ENABLED=${FLYWAY_ENABLED}
+      # Server Configuration
+      - SERVER_PORT=${SERVER_PORT}
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    networks:
+      - backend
+    depends_on:
+      - postgresql
+
+  postgresql:
+    image: postgres:14.2
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB_NAME}
+      - POSTGRES_USER=${POSTGRES_DB_USERNAME}
+      - POSTGRES_PASSWORD=${POSTGRES_DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  postgres_data:
